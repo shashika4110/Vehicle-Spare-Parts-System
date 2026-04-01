@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/COMPLETE_WARRANTY_WORKFLOW_SETUP.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/add_delivered_at_column.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/add_delivery_boy_details.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/add_product_images.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/add_warranty_claims.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/check_and_fix_images.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/create_warranty_claims.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/insert_sample_delivery_boy.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/schema.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/TestTEst/vehicle final/database/update_product_images.sql" dialect="MySQL" />
+  </component>
+</project>
