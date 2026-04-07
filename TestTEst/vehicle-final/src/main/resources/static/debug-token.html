@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Token</title>
+</head>
+<body>
+    <h1>Token Debugger</h1>
+    <div id="output"></div>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const output = document.getElementById('output');
+
+        output.innerHTML = `
+            <h2>Current User Data:</h2>
+            <pre>${JSON.stringify(user, null, 2)}</pre>
+            <hr>
+            <h2>Token Payload:</h2>
+            <pre>${user.token ? atob(user.token.split('.')[1]) : 'No token'}</pre>
+        `;
+    </script>
+</body>
+</html>
+

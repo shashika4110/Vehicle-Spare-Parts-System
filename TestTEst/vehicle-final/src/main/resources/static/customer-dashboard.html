@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Vehicle Spare Parts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #1a1a2e;
+            position: relative;
+            min-height: 100vh;
+        }
+        .bg-gallery {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            opacity: 0.15;
+        }
+        .bg-gallery-item {
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            animation: float 8s ease-in-out infinite;
+        }
+        .bg-gallery-item:nth-child(odd) { animation-delay: 0s; }
+        .bg-gallery-item:nth-child(even) { animation-delay: 4s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);
+            backdrop-filter: blur(3px);
+            z-index: 1;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .glass-nav {
+            background: rgba(79, 70, 229, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <!-- Vehicle Spare Parts Photo Gallery Background -->
+    <div class="bg-gallery">
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1625047509168-a7026f36de04?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1609877200136-1e673936b1e0?w=500');"></div>
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=500');"></div>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <!-- Navigation -->
+    <nav class="glass-nav text-white p-4 shadow-lg content-wrapper">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-car text-2xl"></i>
+                <h1 class="text-xl font-bold">Customer Dashboard</h1>
+            </div>
+            <div class="flex items-center space-x-6">
+                <span id="userName" class="font-semibold"></span>
+                <a href="warranty-claims.html" class="relative hover:text-blue-200" title="My Warranty Claims">
+                    <i class="fas fa-shield-alt text-xl"></i>
+                    <span class="text-sm">Warranties</span>
+                </a>
+                <a href="#" id="cartBtn" class="relative hover:text-blue-200">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </a>
+                <button onclick="logout()" class="hover:text-blue-200">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6 content-wrapper">
+        <!-- Tabs -->
+        <div class="glass rounded-2xl shadow border border-white/20-lg mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex">
+                    <button onclick="showTab('parts')" class="tab-btn px-6 py-4 font-semibold border-b-2 border-blue-600 text-blue-600">
+                        <i class="fas fa-warehouse mr-2"></i>Browse Parts
+                    </button>
+                    <button onclick="showTab('orders')" class="tab-btn px-6 py-4 font-semibold text-gray-700 font-semibold hover:text-blue-600">
+                        <i class="fas fa-box mr-2"></i>My Orders
+                    </button>
+                    <button onclick="showTab('cart')" class="tab-btn px-6 py-4 font-semibold text-gray-700 font-semibold hover:text-blue-600">
+                        <i class="fas fa-shopping-cart mr-2"></i>Shopping Cart
+                    </button>
+                    <button onclick="showTab('warranty')" class="tab-btn px-6 py-4 font-semibold text-gray-700 font-semibold hover:text-blue-600">
+                        <i class="fas fa-shield-alt mr-2"></i>Warranties
+                    </button>
+                    <button onclick="showTab('feedback')" class="tab-btn px-6 py-4 font-semibold text-gray-700 font-semibold hover:text-blue-600">
+                        <i class="fas fa-comment mr-2"></i>Feedback
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Browse Parts Tab -->
+        <div id="partsTab" class="tab-content">
+            <!-- Search Bar -->
+            <div class="glass p-4 rounded-2xl shadow border border-white/20-lg mb-6">
+                <div class="flex gap-4">
+                    <input type="text" id="searchInput" placeholder="Search parts..." 
+                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="searchParts()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Parts Grid -->
+            <div id="partsGrid" class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Parts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- My Orders Tab -->
+        <div id="ordersTab" class="tab-content hidden">
+            <div class="glass rounded-2xl shadow border border-white/20-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">My Orders</h2>
+                    <a href="my-orders.html" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg flex items-center gap-2">
+                        <i class="fas fa-box-open"></i>
+                        View Detailed Orders & Warranty Claims
+                    </a>
+                </div>
+                <div id="ordersList">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Shopping Cart Tab -->
+        <div id="cartTab" class="tab-content hidden">
+            <div class="glass rounded-2xl shadow border border-white/20-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Shopping Cart</h2>
+                <div id="cartItems">
+                    <!-- Cart items will be displayed here -->
+                </div>
+                <div class="mt-6 border-t pt-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xl font-bold">Total:</span>
+                        <span id="cartTotal" class="text-2xl font-bold text-blue-600">Rs. 0.00</span>
+                    </div>
+                    <button onclick="checkout()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+                        <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warranty Tab -->
+        <div id="warrantyTab" class="tab-content hidden">
+            <div class="glass rounded-2xl shadow border border-white/20-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">My Warranties</h2>
+                <div id="warrantyList">
+                    <!-- Warranties will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Tab -->
+        <div id="feedbackTab" class="tab-content hidden">
+            <div class="glass rounded-2xl shadow border border-white/20-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Submit Feedback</h2>
+                <form id="feedbackForm" class="space-y-4">
+                    <div>
+                        <label class="block font-semibold mb-2">Type</label>
+                        <select id="feedbackType" class="w-full px-4 py-2 border rounded-lg">
+                            <option value="PRODUCT_REVIEW">Product Review</option>
+                            <option value="COMPLAINT">Complaint</option>
+                            <option value="SUGGESTION">Suggestion</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Subject</label>
+                        <input type="text" id="feedbackSubject" class="w-full px-4 py-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Message</label>
+                        <textarea id="feedbackMessage" rows="4" class="w-full px-4 py-2 border rounded-lg" required></textarea>
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                        Submit Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/customer.js"></script>
+    <script>
+        // Check authentication
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!user.token || user.role !== 'CUSTOMER') {
+            window.location.href = 'login.html';
+        }
+        document.getElementById('userName').textContent = user.fullName;
+
+        // Cart management
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        updateCartCount();
+
+        // Load spare parts on page load
+        loadSpareParts();
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        async function loadSpareParts() {
+            try {
+                const response = await fetch('http://localhost:8080/api/spareparts', {
+                    headers: {
+                        'Authorization': 'Bearer ' + user.token
+                    }
+                });
+                const parts = await response.json();
+                displayParts(parts);
+            } catch (error) {
+                console.error('Error loading parts:', error);
+            }
+        }
+
+        function displayParts(parts) {
+            const grid = document.getElementById('partsGrid');
+            grid.innerHTML = parts.map(part => `
+                <div class="glass rounded-2xl shadow border border-white/20-lg overflow-hidden hover:shadow-xl transition">
+                    <div class="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative cursor-pointer"
+     onclick="viewProductImage('${part.imageUrl ? part.imageUrl : 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800'}', '${part.partName}', ${part.id})">
+    ${part.imageUrl ?
+                `<img src="${part.imageUrl}" alt="${part.partName}"
+              class="w-full h-full object-cover"
+              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800';">`
+                :
+                `<img src='https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800' alt='${part.partName}' class="w-full h-full object-cover">`
+            }
+
+                        ${part.warrantyMonths ? `<span class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold z-10">
+                            <i class="fas fa-shield-alt mr-1"></i>${part.warrantyMonths} Month Warranty
+                        </span>` : ''}
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">${part.partName}</h3>
+                        <p class="text-sm text-gray-700 font-semibold mb-1">
+                            <i class="fas fa-tag mr-1 text-blue-600"></i>${part.category}
+                        </p>
+                        <p class="text-sm text-gray-700 font-semibold mb-2">
+                            <i class="fas fa-industry mr-1 text-purple-600"></i>${part.brand || 'Universal'}
+                        </p>
+                        <p class="text-2xl font-bold text-blue-600 mb-3">Rs. ${part.price.toFixed(2)}</p>
+                        <p class="text-sm ${part.stockQuantity > 0 ? 'text-green-600' : 'text-red-600'} font-semibold mb-3">
+                            <i class="fas ${part.stockQuantity > 0 ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i>
+                            ${part.stockQuantity > 0 ? 'In Stock: ' + part.stockQuantity : 'Out of Stock'}
+                        </p>
+                        ${part.stockQuantity > 0 ? `
+                            <button onclick="addToCart(${part.id}, '${part.partName}', ${part.price})"
+                                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition shadow-lg">
+                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                            </button>
+                        ` : '<button disabled class="w-full bg-gray-400 text-white py-2 rounded-lg cursor-not-allowed">Out of Stock</button>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id, name, price) {
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert('Added to cart!');
+        }
+
+        function showTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            
+            // Reset all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-blue-600', 'text-blue-600');
+                btn.classList.add('text-gray-700');
+            });
+            
+            // Show selected tab
+            document.getElementById(tab + 'Tab').classList.remove('hidden');
+            
+            // Highlight active button - find the button by its onclick attribute
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+                btn.getAttribute('onclick').includes(`'${tab}'`)
+            );
+            if (activeBtn) {
+                activeBtn.classList.add('border-blue-600', 'text-blue-600');
+                activeBtn.classList.remove('text-gray-700');
+            }
+
+            // Load data for specific tabs
+            if (tab === 'cart') displayCart();
+            if (tab === 'orders') loadOrders();
+            if (tab === 'warranty') loadWarranties();
+        }
+
+        function displayCart() {
+            const container = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-gray-700 font-semibold">Your cart is empty</p>';
+                document.getElementById('cartTotal').textContent = 'Rs. 0.00';
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="flex justify-between items-center border-b py-4">
+                    <div>
+                        <h4 class="font-bold">${item.name}</h4>
+                        <p class="text-gray-700 font-semibold">Rs. ${item.price.toFixed(2)} x ${item.quantity}</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="font-bold">Rs. ${(item.price * item.quantity).toFixed(2)}</span>
+                        <button onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cartTotal').textContent = 'Rs. ' + total.toFixed(2);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            displayCart();
+        }
+
+        async function checkout() {
+            if (cart.length === 0) {
+                alert('Cart is empty');
+                return;
+            }
+
+            const address = prompt('Enter shipping address:');
+            if (!address) return;
+
+            const paymentMethod = prompt('Payment method (CREDIT_CARD/BANK_TRANSFER/CASH_ON_DELIVERY):') || 'CASH_ON_DELIVERY';
+
+            const orderData = {
+                items: cart.map(item => ({ sparePartId: item.id, quantity: item.quantity })),
+                shippingAddress: address,
+                paymentMethod: paymentMethod
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + user.token
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    alert('Order placed successfully!');
+                    cart = [];
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    displayCart();
+                } else {
+                    const error = await response.json();
+                    alert('Order failed: ' + error.message);
+                }
+            } catch (error) {
+                alert('Error placing order');
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('http://localhost:8080/api/orders/my-orders', {
+                    headers: {
+                        'Authorization': 'Bearer ' + user.token
+                    }
+                });
+                const orders = await response.json();
+                displayOrders(orders);
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById('ordersList');
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="text-gray-700 font-semibold">No orders yet</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="border rounded-lg p-4 mb-4 bg-white shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-bold text-lg">Order #${order.orderNumber}</h4>
+                            <p class="text-sm text-gray-700 font-semibold">${new Date(order.orderDate).toLocaleDateString()}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                            order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                            order.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                            order.status === 'DELIVERED' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">${order.status}</span>
+                    </div>
+                    
+                    <!-- Order Items with Images -->
+                    <div class="space-y-2 mb-3">
+                        ${order.items.map(item => `
+                            <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                                <div class="w-20 h-20 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-400 transition"
+                                     onclick="viewProductImage('${item.imageUrl ? item.imageUrl : 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800'}', '${item.partName}', ${item.sparePartId})">
+                                    ${item.imageUrl ? 
+                                        `<img src="${item.imageUrl}" alt="${item.partName}" 
+                                              class="w-full h-full object-cover hover:scale-110 transition-transform duration-300" 
+                                              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=200';">` 
+                                        : 
+                                        `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
+                                            <i class="fas fa-cog text-3xl text-gray-400"></i>
+                                         </div>`
+                                    }
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-sm text-gray-800">${item.partName}</h5>
+                                    <p class="text-xs text-gray-600">
+                                        <i class="fas fa-hashtag text-blue-500"></i> ${item.partNumber || 'N/A'}
+                                    </p>
+                                    <p class="text-xs text-gray-700 font-semibold mt-1">
+                                        <i class="fas fa-shopping-cart text-purple-500"></i> Qty: ${item.quantity} × Rs. ${item.unitPrice.toFixed(2)}
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-blue-600 text-lg">Rs. ${item.subtotal.toFixed(2)}</p>
+                                    ${item.warrantyMonths ? 
+                                        `<span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block mt-1">
+                                            <i class="fas fa-shield-alt"></i> ${item.warrantyMonths}mo
+                                        </span>` 
+                                        : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="border-t pt-3 flex justify-between items-center">
+                        <p class="text-sm text-gray-700 font-semibold">${order.items.length} item(s)</p>
+                        <p class="text-xl font-bold text-blue-600">Total: Rs. ${order.totalAmount.toFixed(2)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadWarranties() {
+            try {
+                const response = await fetch('http://localhost:8080/api/warranties/my-warranties', {
+                    headers: {
+                        'Authorization': 'Bearer ' + user.token
+                    }
+                });
+                const warranties = await response.json();
+                displayWarranties(warranties);
+            } catch (error) {
+                console.error('Error loading warranties:', error);
+                document.getElementById('warrantyList').innerHTML = '<p class="text-red-600">Error loading warranties</p>';
+            }
+        }
+
+        function displayWarranties(warranties) {
+            const container = document.getElementById('warrantyList');
+            if (warranties.length === 0) {
+                container.innerHTML = '<p class="text-gray-700 font-semibold">No warranties found</p>';
+                return;
+            }
+
+            container.innerHTML = warranties.map(warranty => `
+                <div class="border rounded-lg p-4 mb-4 ${warranty.isExpired ? 'bg-gray-50' : 'bg-white'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-bold">${warranty.sparePartName}</h4>
+                            <p class="text-sm text-gray-700 font-semibold">Warranty #${warranty.warrantyNumber}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                            warranty.claimStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                            warranty.claimStatus === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                            warranty.claimStatus === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                            warranty.isExpired ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800'
+                        }">${warranty.claimStatus || (warranty.isExpired ? 'EXPIRED' : 'ACTIVE')}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 font-semibold mb-1">Purchase Date: ${new Date(warranty.purchaseDate).toLocaleDateString()}</p>
+                    <p class="text-sm text-gray-700 font-semibold mb-1">Expiry Date: ${new Date(warranty.expiryDate).toLocaleDateString()}</p>
+                    <p class="text-sm font-semibold ${warranty.isExpired ? 'text-red-600' : 'text-green-600'}">
+                        ${warranty.isExpired ? 'Expired' : `${warranty.daysRemaining} days remaining`}
+                    </p>
+                    ${warranty.canClaim ? `
+                        <button onclick="claimWarranty('${warranty.warrantyNumber}')" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-file-invoice mr-2"></i>File Claim
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        async function claimWarranty(warrantyNumber) {
+            const description = prompt('Please describe the issue:');
+            if (!description) return;
+
+            try {
+                const response = await fetch('http://localhost:8080/api/warranties/file-claim', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + user.token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        warrantyNumber: warrantyNumber,
+                        claimDescription: description
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Warranty claim filed successfully!');
+                    loadWarranties(); // Reload warranties
+                } else {
+                    const error = await response.text();
+                    alert('Error: ' + error);
+                }
+            } catch (error) {
+                console.error('Error filing claim:', error);
+                alert('Failed to file warranty claim');
+            }
+        }
+
+        // Image Viewer Modal Functions
+        function viewProductImage(imageUrl, productName, productId) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const caption = document.getElementById('imageCaption');
+            
+            modal.classList.remove('hidden');
+            modalImg.src = imageUrl.replace('?w=400', '?w=800'); // Load higher resolution
+            caption.textContent = productName;
+            
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside the image
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeImageModal();
+                    }
+                });
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // Feedback form submission
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const feedbackData = {
+                customer: { id: user.id },
+                feedbackType: document.getElementById('feedbackType').value,
+                subject: document.getElementById('feedbackSubject').value,
+                message: document.getElementById('feedbackMessage').value,
+                rating: document.getElementById('feedbackRating') ? parseInt(document.getElementById('feedbackRating').value) : null
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/api/feedback/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + user.token
+                    },
+                    body: JSON.stringify(feedbackData)
+                });
+
+                if (response.ok) {
+                    alert('✅ Feedback submitted successfully!');
+                    document.getElementById('feedbackForm').reset();
+                } else {
+                    throw new Error('Failed to submit feedback');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error submitting feedback. Please try again.');
+            }
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <!-- Image Viewer Modal -->
+    <div id="imageModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4 animate-fadeIn">
+        <div class="relative max-w-6xl max-h-full">
+            <!-- Close Button -->
+            <button onclick="closeImageModal()" 
+                    class="absolute top-4 right-4 z-10 bg-white hover:bg-gray-200 text-gray-800 rounded-full p-3 shadow-lg transition transform hover:scale-110">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <!-- Image Container -->
+            <div class="glass rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
+                <img id="modalImage" 
+                     src="" 
+                     alt="Product Image" 
+                     class="w-full h-auto max-h-[70vh] object-contain bg-white"
+                     onerror="this.src='https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800'">
+                
+                <!-- Image Caption -->
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
+                    <h3 id="imageCaption" class="text-xl font-bold text-center">
+                        <i class="fas fa-image mr-2"></i>Product Image
+                    </h3>
+                    <p class="text-center text-sm mt-1 opacity-90">
+                        <i class="fas fa-info-circle mr-1"></i>Click outside or press ESC to close
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Dashboard - Vehicle Spare Parts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-car text-2xl"></i>
+                <h1 class="text-2xl font-bold">Vehicle Spare Parts</h1>
+            </div>
+            <div class="space-x-4">
+                <a href="index.html" class="hover:text-blue-200 transition"><i class="fas fa-home"></i> Home</a>
+                <a href="#" id="logoutLink" class="hover:text-blue-200 transition"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto py-8 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">
+                    <i class="fas fa-truck mr-3 text-blue-600"></i>Delivery Dashboard
+                </h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Welcome, <span id="userName" class="font-semibold">User</span></span>
+                    <a href="delivery-boy-registration.html" 
+                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i>Register Delivery Boy
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                            <i class="fas fa-clock text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Pending</p>
+                            <p class="text-2xl font-bold" id="pendingCount">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                            <i class="fas fa-truck-moving text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">In Transit</p>
+                            <p class="text-2xl font-bold" id="dispatchedCount">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                            <i class="fas fa-check-circle text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Delivered Today</p>
+                            <p class="text-2xl font-bold" id="deliveredToday">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                            <i class="fas fa-list text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Total Deliveries</p>
+                            <p class="text-2xl font-bold" id="totalDeliveries">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="bg-white rounded-lg shadow mb-8">
+                <div class="border-b border-gray-200">
+                    <nav class="flex -mb-px">
+                        <button class="tab-btn border-b-2 border-blue-600 text-blue-600 px-6 py-4 font-medium text-sm flex items-center">
+                            <i class="fas fa-clock mr-2"></i>Pending
+                        </button>
+                        <button class="tab-btn text-gray-600 hover:text-gray-800 px-6 py-4 font-medium text-sm flex items-center">
+                            <i class="fas fa-truck-moving mr-2"></i>In Transit
+                        </button>
+                        <button class="tab-btn text-gray-600 hover:text-gray-800 px-6 py-4 font-medium text-sm flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>Delivered
+                        </button>
+                        <button class="tab-btn text-gray-600 hover:text-gray-800 px-6 py-4 font-medium text-sm flex items-center">
+                            <i class="fas fa-history mr-2"></i>History
+                        </button>
+                    </nav>
+                </div>
+
+                <div class="p-6">
+                    <div id="message" class="mb-6"></div>
+                    
+                    <!-- Pending Deliveries Tab -->
+                    <div id="pendingTab" class="tab-content">
+                        <h2 class="text-xl font-semibold mb-4">Pending Deliveries</h2>
+                        <div id="pendingList" class="space-y-4">
+                            <p class="text-gray-600">Loading pending deliveries...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- In Transit Deliveries Tab -->
+                    <div id="dispatchedTab" class="tab-content hidden">
+                        <h2 class="text-xl font-semibold mb-4">In Transit Deliveries</h2>
+                        <div id="dispatchedList" class="space-y-4">
+                            <p class="text-gray-600">Loading in transit deliveries...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Delivered Deliveries Tab -->
+                    <div id="deliveredTab" class="tab-content hidden">
+                        <h2 class="text-xl font-semibold mb-4">Delivered Deliveries</h2>
+                        <div id="deliveredList" class="space-y-4">
+                            <p class="text-gray-600">Loading delivered deliveries...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- History Tab -->
+                    <div id="historyTab" class="tab-content hidden">
+                        <h2 class="text-xl font-semibold mb-4">Delivery History</h2>
+                        <div id="historyList" class="space-y-4">
+                            <p class="text-gray-600">Loading delivery history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Delivery Boy Modal -->
+    <div id="assignModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Assign Delivery Boy</h3>
+                <button onclick="closeAssignModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Select Delivery Boy</label>
+                <select id="deliveryBoySelect" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="">Loading delivery boys...</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeAssignModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                    Cancel
+                </button>
+                <button onclick="confirmAssignDeliveryBoy()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Assign
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Delivery Modal -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Edit Delivery Details</h3>
+                <button onclick="closeEditModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2 font-semibold">
+                    <i class="fas fa-user mr-2 text-blue-600"></i>Delivery Person
+                </label>
+                <select id="editDeliveryBoySelect" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">Loading delivery boys...</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2 font-semibold">
+                    <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>Delivery Address
+                </label>
+                <textarea id="editDeliveryAddress" rows="3" 
+                          class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter delivery address"></textarea>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeEditModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-times mr-1"></i>Cancel
+                </button>
+                <button onclick="confirmEditDelivery()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    <i class="fas fa-save mr-1"></i>Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Vehicle Spare Parts Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Wrap everything in an IIFE to avoid global scope issues
+        (function() {
+            const API_URL = 'http://localhost:8080/api';
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            let currentDeliveryId = null;
+            let deliveryBoys = [];
+
+            // Check if user is logged in and has appropriate role
+            if (!user.token) {
+                alert('Please login first');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Allow DELIVERY_STAFF, ADMIN, and STORE_OWNER to access this dashboard
+            if (!['DELIVERY_STAFF', 'ADMIN', 'STORE_OWNER'].includes(user.role)) {
+                alert(`Access denied. This page is for delivery staff, admin, and store owners only. Your role: ${user.role}`);
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = user.fullName || 'User';
+
+            // Logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.href = 'login.html';
+            });
+
+            let deliveries = [];
+            let activeTab = 'pending'; // Track active tab
+
+            // Initialize dashboard
+            loadDashboard();
+
+            async function loadDashboard() {
+                try {
+                    console.log('Loading deliveries for user:', user.role);
+
+                    // Fetch real deliveries from API
+                    const response = await fetch(`${API_URL}/deliveries`, {
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    console.log('Response status:', response.status);
+
+                    if (!response.ok) {
+                        if (response.status === 403) {
+                            throw new Error(`Access denied. Your role (${user.role}) doesn't have permission to view deliveries.`);
+                        } else if (response.status === 401) {
+                            throw new Error('Your session has expired. Please login again.');
+                        }
+                        throw new Error(`Failed to load deliveries (Status: ${response.status})`);
+                    }
+
+                    deliveries = await response.json();
+                    console.log('Loaded deliveries:', deliveries);
+
+                    updateStats();
+                    refreshActiveTab();
+
+                    // Show success message if deliveries loaded
+                    if (deliveries.length === 0) {
+                        document.getElementById('pendingList').innerHTML = `
+                            <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+                                <p class="font-bold">No Deliveries Found</p>
+                                <p>There are currently no deliveries in the system.</p>
+                                <p class="mt-2 text-sm">To create deliveries:</p>
+                                <ul class="list-disc ml-5 text-sm">
+                                    <li>Customer needs to place an order</li>
+                                    <li>Store owner needs to approve the order</li>
+                                    <li>Delivery will be automatically created</li>
+                                </ul>
+                            </div>
+                        `;
+                    }
+
+                } catch (error) {
+                    console.error('Error loading deliveries:', error);
+                    document.getElementById('pendingList').innerHTML = `
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                            <p class="font-bold">Error Loading Deliveries</p>
+                            <p>${error.message}</p>
+                            <p class="mt-2 text-sm"><strong>Troubleshooting:</strong></p>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>Make sure you are logged in as DELIVERY_STAFF, ADMIN, or STORE_OWNER</li>
+                                <li>Check that the backend server is running on port 8080</li>
+                                <li>Ensure orders have been approved (deliveries are created when orders are approved)</li>
+                                <li>Your current role: <strong>${user.role || 'Unknown'}</strong></li>
+                            </ul>
+                            <button onclick="location.reload()" class="mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                                Try Again
+                            </button>
+                        </div>
+                    `;
+                    deliveries = [];
+                    updateStats();
+                }
+            }
+
+            function updateStats() {
+                const pending = deliveries.filter(d => d.status === 'PENDING').length;
+                const dispatched = deliveries.filter(d => d.status === 'IN_TRANSIT' || d.status === 'DISPATCHED').length;
+                const today = new Date().toDateString();
+                const deliveredToday = deliveries.filter(d =>
+                    d.status === 'DELIVERED' &&
+                    d.deliveredAt &&
+                    new Date(d.deliveredAt).toDateString() === today
+                ).length;
+
+                document.getElementById('pendingCount').textContent = pending;
+                document.getElementById('dispatchedCount').textContent = dispatched;
+                document.getElementById('deliveredToday').textContent = deliveredToday;
+                document.getElementById('totalDeliveries').textContent = deliveries.length;
+            }
+
+            function displayPending() {
+                const pending = deliveries.filter(d => d.status === 'PENDING');
+                const container = document.getElementById('pendingList');
+
+                if (pending.length === 0) {
+                    container.innerHTML = '<p class="text-gray-600">No pending deliveries</p>';
+                    return;
+                }
+
+                container.innerHTML = pending.map(delivery => `
+                    <div class="border rounded-lg p-4 mb-4 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-bold text-lg">Delivery #${delivery.deliveryNumber}</h4>
+                                <p class="text-gray-600">Order: ${delivery.order?.orderNumber || 'N/A'}</p>
+                                <p class="text-gray-600">Customer: ${delivery.order?.customer?.fullName || 'N/A'}</p>
+                                <p class="text-gray-600"><i class="fas fa-phone mr-1"></i>${delivery.order?.customer?.phone || 'N/A'}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
+                                PENDING
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-sm text-gray-600"><i class="fas fa-map-marker-alt mr-1"></i>${delivery.deliveryAddress || 'N/A'}</p>
+                            <p class="text-sm text-gray-600 mt-1">Items: ${delivery.order?.orderItems?.length || 0}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="startDelivery(${delivery.id})"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                <i class="fas fa-truck mr-1"></i>Start Delivery
+                            </button>
+                            <button onclick="assignDeliveryBoy(${delivery.id})"
+                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                                <i class="fas fa-user-plus mr-1"></i>Assign Delivery Boy
+                            </button>
+                            <button onclick="viewDetails(${delivery.id})"
+                                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                <i class="fas fa-eye mr-1"></i>Details
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function displayDispatched() {
+                const dispatched = deliveries.filter(d => d.status === 'IN_TRANSIT' || d.status === 'DISPATCHED');
+                const container = document.getElementById('dispatchedList');
+
+                if (dispatched.length === 0) {
+                    container.innerHTML = '<p class="text-gray-600">No deliveries in transit</p>';
+                    return;
+                }
+
+                container.innerHTML = dispatched.map(delivery => `
+                    <div class="border rounded-lg p-4 mb-4 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-bold text-lg">Delivery #${delivery.deliveryNumber}</h4>
+                                <p class="text-gray-600">Order: ${delivery.order?.orderNumber || 'N/A'}</p>
+                                <p class="text-gray-600">Customer: ${delivery.order?.customer?.fullName || 'N/A'}</p>
+                                <p class="text-gray-600"><i class="fas fa-phone mr-1"></i>${delivery.order?.customer?.phone || 'N/A'}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                                IN TRANSIT
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-sm text-gray-600"><i class="fas fa-map-marker-alt mr-1"></i>${delivery.deliveryAddress || 'N/A'}</p>
+                            <p class="text-sm text-gray-600 mt-1">Dispatched: ${delivery.dispatchedAt ? new Date(delivery.dispatchedAt).toLocaleString() : 'N/A'}</p>
+                            ${delivery.deliveryStaff ? `<p class="text-sm text-gray-600 mt-1"><i class="fas fa-user mr-1"></i>Assigned to: ${delivery.deliveryStaff.fullName}</p>` : ''}
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="editDelivery(${delivery.id})"
+                                    class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+                                <i class="fas fa-edit mr-1"></i>Edit
+                            </button>
+                            <button onclick="completeDelivery(${delivery.id})"
+                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                                <i class="fas fa-check mr-1"></i>Mark as Delivered
+                            </button>
+                            <button onclick="addNote(${delivery.id})"
+                                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                <i class="fas fa-sticky-note mr-1"></i>Add Note
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function displayDelivered() {
+                const delivered = deliveries.filter(d => d.status === 'DELIVERED');
+                const container = document.getElementById('deliveredList');
+
+                if (delivered.length === 0) {
+                    container.innerHTML = '<p class="text-gray-600">No completed deliveries</p>';
+                    return;
+                }
+
+                container.innerHTML = delivered.map(delivery => `
+                    <div class="border rounded-lg p-4 mb-4 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-bold text-lg">Delivery #${delivery.deliveryNumber}</h4>
+                                <p class="text-gray-600">Order: ${delivery.order?.orderNumber || 'N/A'}</p>
+                                <p class="text-gray-600">Customer: ${delivery.order?.customer?.fullName || 'N/A'}</p>
+                                <p class="text-gray-600"><i class="fas fa-phone mr-1"></i>${delivery.order?.customer?.phone || 'N/A'}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                                <i class="fas fa-check-circle"></i> DELIVERED
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-sm text-gray-600"><i class="fas fa-map-marker-alt mr-1"></i>${delivery.deliveryAddress || 'N/A'}</p>
+                            <p class="text-sm text-gray-600 mt-1"><i class="fas fa-clock mr-1"></i>Delivered: ${delivery.deliveredAt ? new Date(delivery.deliveredAt).toLocaleString() : 'N/A'}</p>
+                            ${delivery.trackingNotes ? `<p class="text-sm text-gray-600 mt-1"><i class="fas fa-sticky-note mr-1"></i>Notes: ${delivery.trackingNotes}</p>` : ''}
+                            ${delivery.deliveryStaff ? `<p class="text-sm text-gray-600 mt-1"><i class="fas fa-user mr-1"></i>Delivered by: ${delivery.deliveryStaff.fullName}</p>` : ''}
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="deleteDelivery(${delivery.id})"
+                                    class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                                <i class="fas fa-trash mr-1"></i>Delete Record
+                            </button>
+                            <button onclick="viewDetails(${delivery.id})"
+                                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                <i class="fas fa-eye mr-1"></i>Details
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            async function startDelivery(id) {
+                const delivery = deliveries.find(d => d.id === id);
+                if (!delivery) return;
+
+                if (confirm(`Start delivery to ${delivery.order?.customer?.fullName || 'customer'}?`)) {
+                    try {
+                        const response = await fetch(`${API_URL}/deliveries/${id}/status?status=IN_TRANSIT`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${user.token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) throw new Error('Failed to update status');
+
+                        alert('Delivery started! Status updated to IN TRANSIT');
+                        await loadDashboard();
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error updating delivery status');
+                    }
+                }
+            }
+
+            async function completeDelivery(id) {
+                const delivery = deliveries.find(d => d.id === id);
+                if (!delivery) return;
+
+                if (confirm(`Confirm delivery completed for ${delivery.order?.customer?.fullName || 'customer'}?`)) {
+                    try {
+                        const response = await fetch(`${API_URL}/deliveries/${id}/status?status=DELIVERED`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${user.token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) throw new Error('Failed to update status');
+
+                        alert('Delivery marked as completed!');
+                        await loadDashboard();
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error completing delivery');
+                    }
+                }
+            }
+
+            async function addNote(id) {
+                const note = prompt('Add delivery note:');
+                if (note) {
+                    try {
+                        const response = await fetch(`${API_URL}/deliveries/${id}/status?status=IN_TRANSIT&notes=${encodeURIComponent(note)}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${user.token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) throw new Error('Failed to add note');
+
+                        alert('Note added successfully');
+                        await loadDashboard();
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error adding note');
+                    }
+                }
+            }
+
+            function viewDetails(id) {
+                const delivery = deliveries.find(d => d.id === id);
+                if (delivery) {
+                    const customer = delivery.order?.customer || {};
+                    const items = delivery.order?.orderItems || [];
+                    let details = `Delivery Details:
+
+Delivery #: ${delivery.deliveryNumber}
+Order #: ${delivery.order?.orderNumber || 'N/A'}
+Customer: ${customer.fullName || 'N/A'}
+Address: ${delivery.deliveryAddress || 'N/A'}
+Phone: ${customer.phone || 'N/A'}
+Items: ${items.length}
+Status: ${delivery.status}`;
+                    
+                    if (delivery.deliveryStaff) {
+                        details += `\nAssigned Delivery Boy: ${delivery.deliveryStaff.fullName}`;
+                    }
+                    
+                    if (delivery.trackingNotes) {
+                        details += `\nNotes: ${delivery.trackingNotes}`;
+                    }
+                    
+                    alert(details);
+                }
+            }
+
+            function displayHistory() {
+                const container = document.getElementById('historyList');
+
+                if (deliveries.length === 0) {
+                    container.innerHTML = '<p class="text-gray-600">No delivery history</p>';
+                    return;
+                }
+
+                container.innerHTML = deliveries.map(delivery => `
+                    <div class="border rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold">Delivery #${delivery.deliveryNumber}</h4>
+                                <p class="text-sm text-gray-600">Order: ${delivery.order?.orderNumber || 'N/A'}</p>
+                                <p class="text-sm text-gray-600">Customer: ${delivery.order?.customer?.fullName || 'N/A'}</p>
+                                ${delivery.deliveryStaff ? `<p class="text-sm text-gray-600">Delivery Boy: ${delivery.deliveryStaff.fullName}</p>` : ''}
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                                delivery.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                delivery.status === 'IN_TRANSIT' || delivery.status === 'DISPATCHED' ? 'bg-blue-100 text-blue-800' :
+                                'bg-green-100 text-green-800'
+                            }">${delivery.status}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Assign delivery boy functions
+            async function assignDeliveryBoy(deliveryId) {
+                currentDeliveryId = deliveryId;
+                
+                // Load delivery boys
+                try {
+                    const response = await fetch(`${API_URL}/delivery-boys`, {
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load delivery boys');
+                    }
+                    
+                    deliveryBoys = await response.json();
+                    populateDeliveryBoySelect();
+                    document.getElementById('assignModal').classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error loading delivery boys:', error);
+                    alert('Error loading delivery boys: ' + error.message);
+                }
+            }
+
+            function populateDeliveryBoySelect() {
+                const select = document.getElementById('deliveryBoySelect');
+                select.innerHTML = '';
+                
+                if (deliveryBoys.length === 0) {
+                    select.innerHTML = '<option value="">No delivery boys available</option>';
+                    return;
+                }
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select a delivery boy';
+                select.appendChild(defaultOption);
+                
+                // Add delivery boys
+                deliveryBoys.forEach(boy => {
+                    if (boy.isActive) {
+                        const option = document.createElement('option');
+                        option.value = boy.id;
+                        // Show vehicle details only if available
+                        if (boy.vehicleMake && boy.vehicleModel) {
+                            option.textContent = `${boy.fullName} (${boy.vehicleMake} ${boy.vehicleModel})`;
+                        } else if (boy.vehicleMake || boy.vehicleModel) {
+                            // Show whatever vehicle info is available
+                            option.textContent = `${boy.fullName} (${boy.vehicleMake || boy.vehicleModel})`;
+                        } else {
+                            // No vehicle info, just show name
+                            option.textContent = boy.fullName;
+                        }
+                        select.appendChild(option);
+                    }
+                });
+            }
+
+            async function confirmAssignDeliveryBoy() {
+                const deliveryBoyId = document.getElementById('deliveryBoySelect').value;
+                
+                if (!deliveryBoyId) {
+                    alert('Please select a delivery boy');
+                    return;
+                }
+                
+                if (!currentDeliveryId) {
+                    alert('No delivery selected');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(`${API_URL}/deliveries/${currentDeliveryId}/assign?staffId=${deliveryBoyId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Failed to assign delivery boy');
+                    }
+                    
+                    alert('Delivery boy assigned successfully!');
+                    closeAssignModal();
+                    await loadDashboard();
+                } catch (error) {
+                    console.error('Error assigning delivery boy:', error);
+                    alert('Error assigning delivery boy: ' + error.message);
+                }
+            }
+
+            function closeAssignModal() {
+                document.getElementById('assignModal').classList.add('hidden');
+                currentDeliveryId = null;
+            }
+
+            // Delete delivery record
+            window.deleteDelivery = async function(id) {
+                const delivery = deliveries.find(d => d.id === id);
+                if (!delivery) {
+                    alert('Delivery not found!');
+                    return;
+                }
+
+                if (!confirm(`Are you sure you want to delete delivery record #${delivery.deliveryNumber}?\n\nThis will permanently remove this delivery from your list.`)) {
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`${API_URL}/deliveries/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    console.log('Delete response status:', response.status);
+
+                    if (!response.ok) {
+                        const errorData = await response.text();
+                        console.error('Delete error:', errorData);
+                        throw new Error(`Failed to delete: ${errorData}`);
+                    }
+
+                    alert('✅ Delivery record deleted successfully!');
+                    await loadDashboard();
+                } catch (error) {
+                    console.error('Error deleting delivery:', error);
+                    alert('❌ Error: ' + error.message);
+                }
+            }
+
+            // Tab switching functionality
+            document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+                btn.addEventListener('click', function() {
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+                    
+                    // Remove active styling from all buttons
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.classList.remove('border-blue-600', 'text-blue-600');
+                        b.classList.add('text-gray-600');
+                    });
+                    
+                    // Add active styling to clicked button
+                    this.classList.add('border-blue-600', 'text-blue-600');
+                    this.classList.remove('text-gray-600');
+                    
+                    // Show the corresponding tab content and track active tab
+                    if (index === 0) {
+                        activeTab = 'pending';
+                        document.getElementById('pendingTab').classList.remove('hidden');
+                        displayPending();
+                    } else if (index === 1) {
+                        activeTab = 'dispatched';
+                        document.getElementById('dispatchedTab').classList.remove('hidden');
+                        displayDispatched();
+                    } else if (index === 2) {
+                        activeTab = 'delivered';
+                        document.getElementById('deliveredTab').classList.remove('hidden');
+                        displayDelivered();
+                    } else if (index === 3) {
+                        activeTab = 'history';
+                        document.getElementById('historyTab').classList.remove('hidden');
+                        displayHistory();
+                    }
+                });
+            });
+
+            // Edit delivery functions
+            let currentEditDeliveryId = null;
+
+            async function editDelivery(deliveryId) {
+                currentEditDeliveryId = deliveryId;
+                const delivery = deliveries.find(d => d.id === deliveryId);
+                
+                if (!delivery) {
+                    alert('Delivery not found');
+                    return;
+                }
+                
+                // Load delivery boys
+                try {
+                    const response = await fetch(`${API_URL}/delivery-boys`, {
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load delivery boys');
+                    }
+                    
+                    deliveryBoys = await response.json();
+                    populateEditDeliveryBoySelect(delivery.deliveryStaff?.id);
+                    
+                    // Set current delivery address
+                    document.getElementById('editDeliveryAddress').value = delivery.deliveryAddress || '';
+                    
+                    // Show modal
+                    document.getElementById('editModal').classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error loading delivery boys:', error);
+                    alert('Error loading delivery boys: ' + error.message);
+                }
+            }
+
+            function populateEditDeliveryBoySelect(currentStaffId) {
+                const select = document.getElementById('editDeliveryBoySelect');
+                select.innerHTML = '';
+                
+                if (deliveryBoys.length === 0) {
+                    select.innerHTML = '<option value="">No delivery boys available</option>';
+                    return;
+                }
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select a delivery boy';
+                select.appendChild(defaultOption);
+                
+                // Add delivery boys
+                deliveryBoys.forEach(boy => {
+                    if (boy.isActive) {
+                        const option = document.createElement('option');
+                        option.value = boy.id;
+                        
+                        // Show vehicle details only if available
+                        if (boy.vehicleMake && boy.vehicleModel) {
+                            option.textContent = `${boy.fullName} (${boy.vehicleMake} ${boy.vehicleModel})`;
+                        } else if (boy.vehicleMake || boy.vehicleModel) {
+                            option.textContent = `${boy.fullName} (${boy.vehicleMake || boy.vehicleModel})`;
+                        } else {
+                            option.textContent = boy.fullName;
+                        }
+                        
+                        // Select current delivery boy
+                        if (boy.id === currentStaffId) {
+                            option.selected = true;
+                        }
+                        
+                        select.appendChild(option);
+                    }
+                });
+            }
+
+            async function confirmEditDelivery() {
+                const deliveryBoyId = document.getElementById('editDeliveryBoySelect').value;
+                const address = document.getElementById('editDeliveryAddress').value;
+                
+                if (!currentEditDeliveryId) {
+                    alert('No delivery selected');
+                    return;
+                }
+                
+                // Validate that at least one field has changed
+                if (!deliveryBoyId && !address.trim()) {
+                    alert('Please update at least one field');
+                    return;
+                }
+                
+                try {
+                    // Build query params
+                    const params = new URLSearchParams();
+                    if (deliveryBoyId) {
+                        params.append('staffId', deliveryBoyId);
+                    }
+                    if (address.trim()) {
+                        params.append('address', address.trim());
+                    }
+                    
+                    const response = await fetch(`${API_URL}/deliveries/${currentEditDeliveryId}/update-details?${params}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Failed to update delivery');
+                    }
+                    
+                    alert('✅ Delivery updated successfully!');
+                    closeEditModal();
+                    await loadDashboard();
+                } catch (error) {
+                    console.error('Error updating delivery:', error);
+                    alert('❌ Error updating delivery: ' + error.message);
+                }
+            }
+
+            function closeEditModal() {
+                document.getElementById('editModal').classList.add('hidden');
+                document.getElementById('editDeliveryAddress').value = '';
+                currentEditDeliveryId = null;
+            }
+
+            // Function to refresh the currently active tab
+            function refreshActiveTab() {
+                if (activeTab === 'pending') {
+                    displayPending();
+                } else if (activeTab === 'dispatched') {
+                    displayDispatched();
+                } else if (activeTab === 'delivered') {
+                    displayDelivered();
+                } else if (activeTab === 'history') {
+                    displayHistory();
+                }
+            }
+
+            // Make functions available globally
+            window.startDelivery = startDelivery;
+            window.completeDelivery = completeDelivery;
+            window.addNote = addNote;
+            window.viewDetails = viewDetails;
+            window.assignDeliveryBoy = assignDeliveryBoy;
+            window.closeAssignModal = closeAssignModal;
+            window.confirmAssignDeliveryBoy = confirmAssignDeliveryBoy;
+            window.editDelivery = editDelivery;
+            window.closeEditModal = closeEditModal;
+            window.confirmEditDelivery = confirmEditDelivery;
+        })();
+    </script>
+</body>
+</html>

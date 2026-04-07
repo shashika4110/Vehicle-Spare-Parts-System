@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Customer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #4b5563;
+        }
+
+        .order-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .order-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-delivered {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .order-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .message-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .message-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .warranty-info {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .warranty-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .warranty-title {
+            font-weight: bold;
+            color: #0369a1;
+            font-size: 16px;
+        }
+
+        .warranty-badge {
+            padding: 5px 12px;
+            background: #0ea5e9;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .warranty-details {
+            color: #0c4a6e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-disabled {
+            background: #d1d5db;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .close-modal {
+            font-size: 28px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .close-modal:hover {
+            color: #374151;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="customer-dashboard.html" class="back-btn">← Back to Dashboard</a>
+        
+        <h1>📦 My Orders</h1>
+        <p class="subtitle">Track your orders and claim warranty</p>
+
+        <div id="alertContainer"></div>
+
+        <div id="ordersContainer" class="loading">Loading your orders...</div>
+    </div>
+
+    <!-- Warranty Claim Modal -->
+    <div id="warrantyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🛡️ Claim Warranty</h2>
+                <span class="close-modal" onclick="closeWarrantyModal()">&times;</span>
+            </div>
+
+            <form id="warrantyClaimForm">
+                <input type="hidden" id="claimOrderId">
+                <input type="hidden" id="claimProductId">
+
+                <div class="form-group">
+                    <label>Product:</label>
+                    <input type="text" id="claimProductName" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Issue Description: *</label>
+                    <textarea id="claimIssueDescription" required placeholder="Describe the problem with the product..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Comments:</label>
+                    <textarea id="claimComments" placeholder="Any additional information..."></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-success">✅ Submit Warranty Claim</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeWarrantyModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+        let currentUser = null;
+        let allOrders = [];
+        let allWarrantyClaims = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || user.role !== 'CUSTOMER') {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+            await loadOrders();
+            await loadWarrantyClaims();
+        });
+
+        // Show alert
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            container.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Load orders
+        async function loadOrders() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/orders/customer/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    allOrders = await response.json();
+                    displayOrders();
+                } else {
+                    throw new Error('Failed to load orders');
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('ordersContainer').innerHTML = `
+                    <div class="alert alert-error">
+                        ❌ Error loading orders. Please try again.
+                    </div>
+                `;
+            }
+        }
+
+        // Load warranty claims
+        async function loadWarrantyClaims() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/warranty-claims/my-claims/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    allWarrantyClaims = await response.json();
+                }
+            } catch (error) {
+                console.error('Error loading warranty claims:', error);
+            }
+        }
+
+        // Display orders
+        function displayOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            if (allOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders. Start shopping for spare parts!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = allOrders.map(order => createOrderCard(order)).join('');
+        }
+
+        // Create order card HTML
+        function createOrderCard(order) {
+            const statusClass = `status-${order.status.toLowerCase()}`;
+            const statusMessages = getStatusMessages(order);
+            const warrantyInfo = getWarrantyInfo(order);
+            
+            return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-number">Order #${order.orderNumber}</div>
+                        <div class="status-badge ${statusClass}">${order.status}</div>
+                    </div>
+
+                    ${statusMessages}
+
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Order Date</div>
+                            <div class="detail-value">${new Date(order.orderDate).toLocaleDateString()}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total Amount</div>
+                            <div class="detail-value">Rs. ${order.totalAmount.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Payment Method</div>
+                            <div class="detail-value">${order.paymentMethod || 'N/A'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Items</div>
+                            <div class="detail-value">${order.items?.length || 0} item(s)</div>
+                        </div>
+                    </div>
+
+                    <!-- Order Items with Images -->
+                    ${order.items && order.items.length > 0 ? `
+                        <div style="margin-top: 20px;">
+                            <h4 style="font-weight: bold; margin-bottom: 10px; color: #374151;">Order Items:</h4>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                ${order.items.map(item => `
+                                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                        <div style="width: 80px; height: 80px; flex-shrink: 0; background: #e5e7eb; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                            ${item.imageUrl ? 
+                                                `<img src="${item.imageUrl}" alt="${item.partName}" 
+                                                      style="width: 100%; height: 100%; object-fit: cover;" 
+                                                      onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas fa-cog\\" style=\\'font-size: 32px; color: #9ca3af;\\'></i>';">` 
+                                                : 
+                                                `<i class="fas fa-cog" style="font-size: 32px; color: #9ca3af;"></i>`
+                                            }
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <h5 style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 4px;">${item.partName}</h5>
+                                            <p style="font-size: 13px; color: #6b7280; margin-bottom: 2px;">Part #: ${item.partNumber || 'N/A'}</p>
+                                            <p style="font-size: 13px; color: #374151; font-weight: 500;">Quantity: ${item.quantity} × Rs. ${item.unitPrice?.toFixed(2) || '0.00'}</p>
+                                        </div>
+                                        <div style="text-align: right; min-width: 120px;">
+                                            <p style="font-weight: bold; font-size: 18px; color: #667eea; margin-bottom: 4px;">Rs. ${item.subtotal?.toFixed(2) || '0.00'}</p>
+                                            ${item.warrantyMonths ? 
+                                                `<span style="display: inline-block; font-size: 11px; background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 12px; font-weight: 600;">
+                                                    <i class="fas fa-shield-alt"></i> ${item.warrantyMonths} months
+                                                </span>` 
+                                                : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${warrantyInfo}
+                </div>
+            `;
+        }
+
+        // Get status messages
+        function getStatusMessages(order) {
+            let messages = '';
+
+            if (order.status === 'PENDING') {
+                messages = `
+                    <div class="order-message message-warning">
+                        ⏳ <strong>Waiting for Approval:</strong> Your order is pending approval from the store owner. You will be notified once it's approved.
+                    </div>
+                `;
+            } else if (order.status === 'APPROVED') {
+                messages = `
+                    <div class="order-message message-success">
+                        ✅ <strong>Order Approved!</strong> Your order has been approved and will be prepared for delivery soon. 
+                        ${order.approvedAt ? `Approved on ${new Date(order.approvedAt).toLocaleDateString()}` : ''}
+                    </div>
+                    <div class="order-message message-info">
+                        📦 <strong>Next Step:</strong> Delivery will be assigned soon. You can track delivery status once it's dispatched.
+                    </div>
+                `;
+            } else if (order.status === 'DELIVERED') {
+                messages = `
+                    <div class="order-message message-success">
+                        🎉 <strong>Order Delivered!</strong> Your order has been successfully delivered. 
+                    </div>
+                    <div class="order-message message-info">
+                        🛡️ <strong>Warranty Available:</strong> This order includes warranty coverage. If you experience any issues with the product, you can claim warranty below.
+                    </div>
+                `;
+            } else if (order.status === 'REJECTED') {
+                messages = `
+                    <div class="order-message message-error">
+                        ❌ <strong>Order Rejected:</strong> Unfortunately, this order was rejected. Please contact support for more information.
+                    </div>
+                `;
+            }
+
+            return messages;
+        }
+
+        // Get warranty info
+        function getWarrantyInfo(order) {
+            if (order.status !== 'DELIVERED') {
+                return '';
+            }
+
+            // Check if order has items with warranty
+            const hasWarrantyItems = order.items && order.items.some(item => 
+                item.warrantyMonths && item.warrantyMonths > 0
+            );
+
+            if (!hasWarrantyItems) {
+                return '';
+            }
+
+            // Check if warranty claim already exists for this order
+            const existingClaim = allWarrantyClaims.find(claim => claim.order?.id === order.id);
+
+            let warrantyContent = '';
+
+            if (existingClaim) {
+                const statusColor = {
+                    'PENDING': '#f59e0b',
+                    'UNDER_REVIEW': '#3b82f6',
+                    'APPROVED': '#10b981',
+                    'REJECTED': '#ef4444',
+                    'COMPLETED': '#6b7280'
+                }[existingClaim.status] || '#6b7280';
+
+                // Build store response section based on status
+                let storeResponseSection = '';
+                if (existingClaim.status === 'PENDING') {
+                    storeResponseSection = `
+                        <div style="margin: 15px 0; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                            <strong>⏳ Status: Awaiting Store Owner Review</strong><br>
+                            <span style="color: #856404;">Your warranty claim has been submitted and is waiting for the store owner to review and respond. You will see the store owner's decision here once they approve or reject your claim.</span>
+                        </div>
+                    `;
+                } else if (existingClaim.status === 'APPROVED' && existingClaim.storeResponse) {
+                    storeResponseSection = `
+                        <div style="margin: 15px 0; padding: 15px; background: #d4edda; border-left: 4px solid #28a745; border-radius: 5px;">
+                            <strong>✅ CLAIM APPROVED!</strong><br>
+                            <strong>Store Owner Response:</strong><br>
+                            <span style="font-size: 14px; color: #155724;">${existingClaim.storeResponse}</span>
+                        </div>
+                    `;
+                } else if (existingClaim.status === 'REJECTED' && existingClaim.storeResponse) {
+                    storeResponseSection = `
+                        <div style="margin: 15px 0; padding: 15px; background: #f8d7da; border-left: 4px solid #dc3545; border-radius: 5px;">
+                            <strong>❌ CLAIM REJECTED</strong><br>
+                            <strong>Store Owner Response:</strong><br>
+                            <span style="font-size: 14px; color: #721c24;">${existingClaim.storeResponse}</span>
+                        </div>
+                    `;
+                } else if (existingClaim.status === 'UNDER_REVIEW') {
+                    storeResponseSection = `
+                        <div style="margin: 15px 0; padding: 15px; background: #cce5ff; border-left: 4px solid #007bff; border-radius: 5px;">
+                            <strong>🔍 Status: Under Review</strong><br>
+                            <span style="color: #004085;">The store owner is currently reviewing your warranty claim. A decision will be made soon.</span>
+                        </div>
+                    `;
+                }
+
+                warrantyContent = `
+                    <div class="warranty-info">
+                        <div class="warranty-header">
+                            <div class="warranty-title">🛡️ Warranty Claim Status</div>
+                            <div class="warranty-badge" style="background: ${statusColor};">
+                                ${existingClaim.status}
+                            </div>
+                        </div>
+                        <div class="warranty-details">
+                            <strong>Claim Number:</strong> ${existingClaim.claimNumber}<br>
+                            <strong>Product:</strong> ${existingClaim.product?.partName || 'N/A'}<br>
+                            <strong>Your Issue Description:</strong> ${existingClaim.issueDescription}<br>
+                            ${existingClaim.customerComments ? `<strong>Your Comments:</strong> ${existingClaim.customerComments}<br>` : ''}
+                            <strong>Filed On:</strong> ${new Date(existingClaim.createdAt).toLocaleDateString()}<br>
+                            <strong>Warranty Expiry:</strong> ${existingClaim.warrantyExpiryDate}
+                            ${storeResponseSection}
+                        </div>
+                        <div class="action-buttons">
+                            <a href="warranty-claims.html" class="btn btn-primary">View All Claims</a>
+                            ${existingClaim.status === 'PENDING' ? `
+                                <button class="btn btn-secondary" onclick="location.reload()">
+                                    🔄 Refresh Status
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Show claim buttons for each warranty item
+                const warrantyItems = order.items.filter(item => 
+                    item.warrantyMonths && item.warrantyMonths > 0
+                );
+
+                const itemButtons = warrantyItems.map(item => {
+                    const purchaseDate = new Date(order.orderDate);
+                    const expiryDate = new Date(purchaseDate);
+                    expiryDate.setMonth(expiryDate.getMonth() + (item.warrantyMonths || 12));
+                    const isExpired = new Date() > expiryDate;
+
+                    return `
+                        <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 5px;">
+                            <strong>${item.partName}</strong> - Warranty: ${item.warrantyMonths} months
+                            (Expires: ${expiryDate.toLocaleDateString()})
+                            <br>
+                            ${isExpired 
+                                ? '<span style="color: #ef4444;">⚠️ Warranty Expired</span>'
+                                : `<button class="btn btn-warning" style="margin-top: 5px;" onclick="openWarrantyClaim(${order.id}, ${item.sparePartId}, '${item.partName}')">
+                                    🛡️ Claim Warranty
+                                   </button>`
+                            }
+                        </div>
+                    `;
+                }).join('');
+
+                warrantyContent = `
+                    <div class="warranty-info">
+                        <div class="warranty-header">
+                            <div class="warranty-title">🛡️ Warranty Coverage Available</div>
+                            <div class="warranty-badge">ACTIVE</div>
+                        </div>
+                        <div class="warranty-details">
+                            Products in this order are covered by warranty. If you experience any defects or issues, you can file a warranty claim:
+                            ${itemButtons}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return warrantyContent;
+        }
+
+        // Open warranty claim modal
+        function openWarrantyClaim(orderId, productId, productName) {
+            document.getElementById('claimOrderId').value = orderId;
+            document.getElementById('claimProductId').value = productId;
+            document.getElementById('claimProductName').value = productName;
+            document.getElementById('claimIssueDescription').value = '';
+            document.getElementById('claimComments').value = '';
+            document.getElementById('warrantyModal').classList.add('active');
+        }
+
+        // Close warranty modal
+        function closeWarrantyModal() {
+            document.getElementById('warrantyModal').classList.remove('active');
+        }
+
+        // Submit warranty claim
+        document.getElementById('warrantyClaimForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const orderId = document.getElementById('claimOrderId').value;
+            const productId = document.getElementById('claimProductId').value;
+            const issueDescription = document.getElementById('claimIssueDescription').value;
+            const comments = document.getElementById('claimComments').value;
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/warranty-claims/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        customerId: currentUser.id,
+                        orderId: parseInt(orderId),
+                        productId: parseInt(productId),
+                        issueDescription,
+                        customerComments: comments
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert(`✅ Warranty claim created successfully! Claim Number: ${data.claimNumber}`, 'success');
+                    closeWarrantyModal();
+                    await loadWarrantyClaims();
+                    displayOrders();
+                } else {
+                    throw new Error(data.error || 'Failed to create claim');
+                }
+            } catch (error) {
+                showAlert('❌ Error: ' + error.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

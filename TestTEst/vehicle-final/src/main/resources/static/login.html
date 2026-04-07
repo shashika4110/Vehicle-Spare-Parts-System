@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Login - Vehicle Spare Parts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-white {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            background: #1a1a2e;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .bg-gallery {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            opacity: 0.3;
+        }
+        .bg-gallery-item {
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            animation: float 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        .bg-gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
+            z-index: 1;
+        }
+        .bg-gallery-item:nth-child(1) { animation-delay: 0s; }
+        .bg-gallery-item:nth-child(2) { animation-delay: 0.5s; }
+        .bg-gallery-item:nth-child(3) { animation-delay: 1s; }
+        .bg-gallery-item:nth-child(4) { animation-delay: 1.5s; }
+        .bg-gallery-item:nth-child(5) { animation-delay: 2s; }
+        .bg-gallery-item:nth-child(6) { animation-delay: 2.5s; }
+        .bg-gallery-item:nth-child(7) { animation-delay: 3s; }
+        .bg-gallery-item:nth-child(8) { animation-delay: 3.5s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1;
+        }
+        .spare-parts-icons {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .floating-icon {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: floatIcon 10s ease-in-out infinite;
+        }
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-icon:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 4s; }
+        .floating-icon:nth-child(4) { bottom: 25%; right: 10%; animation-delay: 6s; }
+        .floating-icon:nth-child(5) { top: 50%; left: 5%; animation-delay: 1s; }
+        .floating-icon:nth-child(6) { top: 60%; right: 8%; animation-delay: 3s; }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Vehicle Spare Parts Photo Gallery Background -->
+    <div class="bg-gallery">
+        <!-- Brake Pads -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500');"></div>
+        <!-- Engine Parts -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500');"></div>
+        <!-- Wheels & Tires -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500');"></div>
+        <!-- Oil Filter -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1625047509168-a7026f36de04?w=500');"></div>
+        <!-- Suspension -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=500');"></div>
+        <!-- Spark Plugs -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500');"></div>
+        <!-- Battery -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1609877200136-1e673936b1e0?w=500');"></div>
+        <!-- Tools -->
+        <div class="bg-gallery-item" style="background-image: url('https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=500');"></div>
+    </div>
+    
+    <!-- Gradient Overlay with Blur -->
+    <div class="overlay"></div>
+    
+    <!-- Floating Spare Parts Icons -->
+    <div class="spare-parts-icons">
+        <i class="floating-icon fas fa-cog text-white"></i>
+        <i class="floating-icon fas fa-oil-can text-white"></i>
+        <i class="floating-icon fas fa-car-battery text-white"></i>
+        <i class="floating-icon fas fa-wrench text-white"></i>
+        <i class="floating-icon fas fa-tools text-white"></i>
+        <i class="floating-icon fas fa-gas-pump text-white"></i>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-md mx-auto">
+            <!-- Glass Container with Enhanced Effect -->
+            <div class="glass-white rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20">
+                <!-- Header with Glass Effect -->
+                <div class="glass p-8 text-white text-center relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-blue-600/30"></div>
+                    <div class="relative z-10">
+                        <div class="inline-block p-4 glass-white rounded-full mb-4 shadow-lg">
+                            <i class="fas fa-car text-5xl text-purple-600"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-2 text-shadow">Welcome Back</h2>
+                        <p class="text-white/90">Vehicle Spare Parts Management</p>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="p-8">
+                    <form id="loginForm">
+                        <!-- Alert -->
+                        <div id="alert" class="hidden mb-4 p-4 rounded-2xl"></div>
+
+                        <!-- Username -->
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-user mr-2 text-purple-600"></i>Username
+                            </label>
+                            <input type="text" id="username" name="username" required
+                                   class="w-full px-4 py-3 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-800 placeholder-gray-500"
+                                   placeholder="Enter your username">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-lock mr-2 text-purple-600"></i>Password
+                            </label>
+                            <input type="password" id="password" name="password" required
+                                   class="w-full px-4 py-3 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-800 placeholder-gray-500"
+                                   placeholder="Enter your password">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="loginBtn"
+                                class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-2xl font-semibold hover:shadow-lg transform hover:scale-[1.02] transition duration-200">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                        </button>
+                    </form>
+
+                    <!-- Links -->
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">
+                            Don't have an account? 
+                            <a href="register.html" class="text-purple-600 hover:text-purple-800 font-semibold">Register here</a>
+                        </p>
+                        <a href="index.html" class="text-gray-600 hover:text-gray-800 block mt-3">
+                            <i class="fas fa-home mr-1"></i>Back to Home
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const alertDiv = document.getElementById('alert');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                showAlert('Signing in...', 'info');
+                const response = await fetch('http://localhost:8080/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Save token and user info
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data));
+                    
+                    showAlert('Login successful! Redirecting...', 'success');
+                    
+                    // Redirect based on role
+                    setTimeout(() => {
+                        switch(data.role) {
+                            case 'ADMIN':
+                                window.location.href = 'admin-dashboard.html';
+                                break;
+                            case 'STORE_OWNER':
+                                window.location.href = 'store-dashboard.html';
+                                break;
+                            case 'CUSTOMER':
+                                window.location.href = 'customer-dashboard.html';
+                                break;
+                            case 'DELIVERY_STAFF':
+                                window.location.href = 'delivery-dashboard.html';
+                                break;
+                            default:
+                                window.location.href = 'index.html';
+                        }
+                    }, 1000);
+                } else {
+                    showAlert(data.message || 'Invalid username or password', 'error');
+                }
+            } catch (error) {
+                showAlert('Connection error. Please try again.', 'error');
+            }
+        });
+
+        function showAlert(message, type) {
+            alertDiv.className = `mb-4 p-4 rounded-2xl glass-white ${
+                type === 'error' ? 'border-l-4 border-red-500 text-red-700' :
+                type === 'success' ? 'border-l-4 border-green-500 text-green-700' :
+                'border-l-4 border-blue-500 text-blue-700'
+            }`;
+            alertDiv.textContent = message;
+            alertDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
