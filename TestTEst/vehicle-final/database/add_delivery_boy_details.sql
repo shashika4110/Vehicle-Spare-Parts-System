@@ -13,4 +13,5 @@ CREATE TABLE delivery_boy_details (
     UNIQUE KEY uk_vehicle_number (vehicle_number),
     UNIQUE KEY uk_license_number (license_number),
     INDEX idx_user_id (user_id)
+    
 );
