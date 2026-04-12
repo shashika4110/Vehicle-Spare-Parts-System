@@ -55,6 +55,7 @@ public class DeliveryController {
     public ResponseEntity<List<Delivery>> getDeliveriesByStatus(@PathVariable String status) {
         return ResponseEntity.ok(deliveryService.getDeliveriesByStatus(status));
     }
+
     
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('ADMIN', 'DELIVERY_STAFF')")
