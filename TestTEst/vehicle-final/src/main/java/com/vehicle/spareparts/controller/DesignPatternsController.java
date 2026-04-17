@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Design Patterns Controller
- * Demonstrates all implemented design patterns
- */
+
 @RestController
 @RequestMapping("/api/design-patterns")
 @CrossOrigin(origins = "*")
@@ -62,10 +59,7 @@ public class DesignPatternsController {
         }
     }
 
-    /**
-     * FACTORY PATTERN - Get Available Report Types
-     * Endpoint: GET /api/design-patterns/reports/available
-     */
+    
     @GetMapping("/reports/available")
     @PreAuthorize("hasAnyRole('ADMIN', 'STORE_OWNER')")
     public ResponseEntity<?> getAvailableReports() {
