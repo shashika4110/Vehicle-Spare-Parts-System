@@ -20,7 +20,7 @@ public class DeliveryBoyResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    // Vehicle Information
+    // Vehicle Details
     private String vehicleMake;
     private String vehicleModel;
     private String vehicleNumber;
