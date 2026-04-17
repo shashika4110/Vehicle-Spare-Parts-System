@@ -19,7 +19,7 @@ public class DeliveryBoyProfileUpdateRequest {
     
     private String address;
     
-    // Vehicle Information
+    
     @NotBlank(message = "Vehicle make is required")
     private String vehicleMake;
     
