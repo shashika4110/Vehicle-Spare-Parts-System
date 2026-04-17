@@ -33,7 +33,7 @@ public class DeliveryBoyRegisterRequest {
     
     private String address;
     
-    // Vehicle Information
+    // Vehicle Details
     @NotBlank(message = "Vehicle make is required")
     private String vehicleMake;
     
