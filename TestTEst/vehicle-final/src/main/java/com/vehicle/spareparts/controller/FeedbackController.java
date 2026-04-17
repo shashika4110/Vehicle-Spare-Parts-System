@@ -16,7 +16,7 @@ public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
     
-    // CREATE - Customer submits feedback
+  
     @PostMapping("/create")
     public ResponseEntity<Feedback> createFeedback(@RequestBody Feedback feedback) {
         try {
@@ -27,7 +27,7 @@ public class FeedbackController {
         }
     }
     
-    // READ - Get all feedback (Store owner)
+    
     @GetMapping("/all")
     public ResponseEntity<List<Feedback>> getAllFeedback() {
         try {
@@ -38,7 +38,7 @@ public class FeedbackController {
         }
     }
     
-    // READ - Get customer's own feedback
+   
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Feedback>> getCustomerFeedback(@PathVariable Long customerId) {
         try {
