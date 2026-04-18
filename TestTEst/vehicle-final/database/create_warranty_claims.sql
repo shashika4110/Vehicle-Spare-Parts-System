@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS warranty_claims (
     INDEX idx_created_at (created_at)
 );
 
+
 -- Add some sample warranty claims for testing
 INSERT INTO warranty_claims (claim_number, customer_id, product_id, order_id, purchase_date, warranty_expiry_date, issue_description, customer_comments, status, created_at)
 SELECT 
