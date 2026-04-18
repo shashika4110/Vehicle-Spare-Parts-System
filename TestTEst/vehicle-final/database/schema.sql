@@ -54,6 +54,7 @@ CREATE TABLE spare_parts (
     INDEX idx_part_name (part_name)
 );
 
+
 -- Create Orders Table
 CREATE TABLE orders (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
