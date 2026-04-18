@@ -1,5 +1,3 @@
--- Script to Check and Fix image_url Column in Database
--- Run this in MySQL Workbench or MySQL Command Line
 
 USE vehicle_spareparts_db;
 
