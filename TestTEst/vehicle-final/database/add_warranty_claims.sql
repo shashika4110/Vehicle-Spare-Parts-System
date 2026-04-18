@@ -1,4 +1,4 @@
--- Add more warranty records with different statuses and claims
+
 
 -- Additional warranties with claims
 INSERT INTO warranties (warranty_number, order_item_id, customer_id, spare_part_id, purchase_date, expiry_date, status, claim_status, claim_date, claim_notes) VALUES
