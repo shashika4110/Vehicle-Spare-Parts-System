@@ -1,5 +1,3 @@
--- Migration Script: Add image_url column if not exists and update existing products with sample images
--- Run this script in MySQL Workbench or command line
 
 USE vehicle_spareparts_db;
 
